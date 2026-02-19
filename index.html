@@ -6,15 +6,27 @@
     <title>RESTRICTED: Bharat Singh Rawat, Ph.D. // Dossier #26031992</title>
     
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']]
+            }
+        };
+    </script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     
     <link href="https://fonts.googleapis.com/css2?family=Baskervville&family=VT323&display=swap" rel="stylesheet">
     
+    <script src="playlist.js"></script>
+
     <style>
         :root {
             --gate-red: #ff1a1a;
             --psychic-blue: #00f2ff;
             --void-black: #020205;
+            --amber-warn: #ffb300;
+            --rift-purple: #a100ff;
         }
 
         body, html {
@@ -24,13 +36,38 @@
             font-family: 'VT323', monospace;
             overflow-x: hidden;
             cursor: none;
-            transition: transform 1.5s cubic-bezier(0.8, 0, 0.2, 1), background-color 1s;
+            transition: transform 1.5s cubic-bezier(0.8, 0, 0.2, 1), background-color 1.5s;
         }
+
+        /* --- THE RED RIFT VIGNETTE --- */
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle, transparent 40%, rgba(255, 0, 0, 0.4) 100%);
+            z-index: 9999996;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 1.5s ease;
+        }
+        body.vecna-curse::before { opacity: 1; }
 
         /* --- THE VECNA CURSE --- */
         .vecna-curse { transform: rotate(180deg); background-color: #1a0000; }
+        
+        #upside-down-msg {
+            position: fixed; top: 50%; left: 50%; 
+            transform: translate(-50%, -50%) rotate(180deg);
+            color: var(--gate-red); font-size: 5rem; text-align: center;
+            z-index: 10000002; display: none; pointer-events: none;
+            text-shadow: 0 0 20px #f00; letter-spacing: 15px;
+            animation: flicker 0.2s infinite;
+        }
 
-        /* --- CURSOR BEACON --- */
+        @keyframes flicker {
+            0% { opacity: 0.8; } 50% { opacity: 0.2; } 100% { opacity: 1; }
+        }
+
         #psychic-cursor {
             position: fixed; width: 12px; height: 12px;
             background: var(--psychic-blue); border-radius: 50%;
@@ -39,7 +76,6 @@
             transform: translate(-50%, -50%);
         }
 
-        /* --- CRT FX --- */
         body::after {
             content: " "; display: block; position: fixed; inset: 0;
             background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.15) 50%), 
@@ -47,19 +83,25 @@
             z-index: 9999999; pointer-events: none; opacity: 0.4;
         }
 
-        #bg-canvas, #fx-canvas { position: fixed; inset: 0; z-index: -1; pointer-events: none; }
-        #fx-canvas { z-index: 9999998; }
+        #fx-canvas { position: fixed; inset: 0; z-index: 9999998; pointer-events: none; }
 
-        /* --- DOSSIER LAYOUT --- */
         .container { max-width: 1000px; margin: 0 auto; padding: 150px 20px; perspective: 2000px; }
         
+        /* SECTION COLOR VARIATIONS */
         .lab-card {
             background: linear-gradient(135deg, #1e1e21 0%, #121214 100%);
             border: 1px solid #444; border-left: 10px solid var(--gate-red);
             padding: 50px; margin-bottom: 80px;
             box-shadow: 30px 30px 60px rgba(0,0,0,0.9);
-            transform-style: preserve-3d; transition: transform 0.3s ease;
+            transform-style: preserve-3d; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
+
+        /* Hover Dynamics */
+        .summary-sec:hover { border-left-color: var(--psychic-blue); box-shadow: 0 0 40px rgba(0, 242, 255, 0.2); }
+        .record-sec:hover { border-left-color: var(--amber-warn); box-shadow: 0 0 40px rgba(255, 179, 0, 0.2); }
+        .clearance-sec:hover { border-left-color: var(--rift-purple); box-shadow: 0 0 40px rgba(161, 0, 255, 0.2); }
+        .archives-sec:hover { border-left-color: #fff; box-shadow: 0 0 40px rgba(255, 255, 255, 0.2); }
+        .intel-sec:hover { border-left-color: #00ff41; box-shadow: 0 0 40px rgba(0, 255, 65, 0.2); }
 
         h1 { font-family: 'Baskervville', serif; font-size: 4.8rem; color: var(--gate-red); text-shadow: 0 0 30px #f00; margin: 0; }
         h2.module-title { color: #888; text-transform: uppercase; letter-spacing: 10px; border-bottom: 2px solid #333; padding-bottom: 15px; margin-top: 80px; font-size: 1.4rem; }
@@ -69,41 +111,42 @@
         
         ul { list-style: none; padding: 0; margin-top: 25px; }
         li::before { content: "➤ "; color: var(--psychic-blue); font-weight: bold; }
-        li { margin-bottom: 20px; font-size: 1.45rem; line-height: 1.6; color: #ddd; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 10px; }
+        li { margin-bottom: 20px; font-size: 1.45rem; line-height: 1.6; color: #ddd; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 10px; transition: 0.3s; }
+        li:hover { color: #fff; transform: translateX(10px); }
 
-        .pub-box { background: rgba(0, 242, 255, 0.03); padding: 25px; border-left: 5px solid var(--gate-red); margin-bottom: 20px; transition: 0.4s; color: #ccc; }
+        .pub-box { background: rgba(255,255,255, 0.03); padding: 25px; border-left: 5px solid var(--gate-red); margin-bottom: 20px; transition: 0.4s; color: #ccc; }
+        .pub-box:hover { background: rgba(255,255,255, 0.08); transform: scale(1.02); color: #fff; }
 
-        /* --- MOVABLE/DISINTEGRATING JUKEBOX --- */
         #jukebox-card {
             position: fixed; top: 150px; left: 30px; width: 280px;
             background: #000; border: 3px solid var(--psychic-blue);
             padding: 20px; z-index: 999999; box-shadow: 0 0 50px #000;
-            user-select: none; transition: opacity 0.4s ease, filter 0.4s ease, transform 0.4s ease;
+            user-select: none;
         }
         #j-header { cursor: move; color: var(--psychic-blue); border-bottom: 1px solid var(--psychic-blue); padding-bottom: 8px; font-weight: bold; font-size: 0.9rem; }
-        .btn-lab { background: none; border: 2px solid var(--psychic-blue); color: var(--psychic-blue); padding: 10px; cursor: pointer; width: 100%; margin-top: 10px; font-family: 'VT323'; font-size: 1.1rem; }
+        .btn-lab { background: none; border: 2px solid var(--psychic-blue); color: var(--psychic-blue); padding: 8px; cursor: pointer; font-family: 'VT323'; font-size: 1.1rem; width: 100%; margin-top: 5px; }
         .btn-lab:hover { background: var(--psychic-blue); color: #000; }
-        
-        #vol { width: 100%; accent-color: var(--psychic-blue); margin-top: 15px; cursor: pointer; }
+        #t-text { font-size: 0.85rem; margin: 10px 0; color: #fff; height: 1.2rem; overflow: hidden; border-left: 3px solid var(--gate-red); padding-left: 8px; }
     </style>
 </head>
 <body>
 
     <div id="psychic-cursor"></div>
+    <div id="upside-down-msg">WELCOME TO THE<br>UPSIDE DOWN</div>
     <canvas id="fx-canvas"></canvas>
 
     <div id="intro-container" style="position:fixed; inset:0; z-index:10000001; background:#000; display:flex; flex-direction:column; justify-content:center; align-items:center;">
-        <h1 style="color:white; font-family:'Baskervville'; font-size: 4rem; text-align: center;">HAWKINS NATIONAL LABORATORY</h1>
+        <h1 style="color:white; font-family:'Baskervville'; font-size: 4rem; text-align: center;"> WELCOME TO THE LABORATORY</h1>
         <p style="color:var(--gate-red); letter-spacing: 15px; margin-top: 20px;">SUBJECT: RAWAT, B.S. // CLASSIFIED ACCESS</p>
         <button id="init-btn" onclick="startSystem()" style="background:transparent; color:red; border:3px solid red; padding:20px 50px; font-size:2rem; cursor:pointer; margin-top:40px; letter-spacing:10px;">DECRYPT DOSSIER</button>
     </div>
 
     <div class="container">
-        <section class="lab-card">
+        <section class="lab-card summary-sec">
             <span style="color:var(--gate-red); font-weight:bold; letter-spacing:5px;">[ SECURITY CLEARANCE: LEVEL 5 ]</span>
             <h1>BHARAT SINGH RAWAT, Ph.D.</h1>
             <h3 style="color: #666; margin-top: 15px; font-size: 1.8rem;">// ION SOURCE & BEAM DIAGNOSTICS EXPERT</h3>
-            <p style="color:#aaa; font-size: 1.6rem; margin-top: 25px;">Expert in manipulating charged particle beams with 7+ years of experience in high-energy physics, digital twins, and interdimensional rift modeling.</p>
+            <p style="color:#aaa; font-size: 1.6rem; margin-top: 25px;">Expert in manipulating charged particle beams with 7+ years of experience in ion sources , beam extraction/transport systems and digital twins.</p>
             <div style="margin-top: 40px;">
                 <a href="https://bharat26031992.github.io/AEgIS_Outreach_Game/" target="_blank" class="btn-lab" style="display:inline-block; width:auto; text-decoration:none; padding: 15px 35px;">OP: DIGITAL TWIN GAME</a>
                 <a href="https://bharat26031992.github.io/Project-Hbar/" target="_blank" class="btn-lab" style="display:inline-block; width:auto; text-decoration:none; padding: 15px 35px; margin-left: 20px; border-color: var(--gate-red); color: var(--gate-red);">OP: PROJECT HBAR</a>
@@ -111,7 +154,7 @@
         </section>
 
         <h2 class="module-title">[ 01: SERVICE RECORD ]</h2>
-        <div class="lab-card">
+        <div class="lab-card record-sec">
             <span class="sub-role">Research Associate | University of Liverpool / Cockcroft Institute / CERN</span>
             <span class="date-tag">2023 — 2026</span>
             <ul>
@@ -130,41 +173,41 @@
         </div>
 
         <h2 class="module-title">[ 02: SCIENTIFIC CLEARANCE ]</h2>
-        <div class="lab-card">
+        <div class="lab-card clearance-sec">
             <span class="sub-role">Ph.D. | Homi Bhabha National Institute / Institute for Plasma Research</span>
             <span class="date-tag">2018 — 2024</span>
             <ul>
-                <li>Designed a ring cusp ion source for \(\text{Ar}^+\) beams (\(1\text{ to } 2\text{ keV}\), \(100\text{ mA}\)).</li>
-                <li>Utilized CST Studio for magnetic cusp optimization and OPERA-3D for ion optics design, achieving a low beam divergence of \(\sim 6.5^\circ\).</li>
-                <li>Conducted transient thermo-structural analysis in ANSYS to design a grid mounting system that limited thermal deformation to \(< 0.1\text{ mm}\).</li>
+                <li>Designed a ring cusp ion source for $\text{Ar}^+$ beams ($1$ to $2\text{ keV}$, $100\text{ mA}$).</li>
+                <li>Utilized CST Studio for magnetic cusp optimization and OPERA-3D for ion optics design, achieving a low beam divergence of $\sim 6.5^\circ$.</li>
+                <li>Conducted transient thermo-structural analysis in ANSYS to design a grid mounting system that limited thermal deformation to $< 0.1\text{ mm}$.</li>
                 <li>Engineered a nine-channel Parallel Wire Array (PWA) and a Faraday Cup array (FCA) for real-time monitoring of ion beam profiles.</li>
             </ul>
 
             <span class="sub-role">M.Tech. Nuclear Engineering | Pandit Deendayal Petroleum University</span>
             <span class="date-tag">2015 — 2017</span>
             <ul>
-                <li>Developed a \(10\text{ kW}\) Faraday cup capable of measuring \(20\text{ to } 30\text{ mA}\) beam intensities.</li>
-                <li>Designed cooling systems maintaining copper Faraday Cup at \(350.6^\circ\text{C}\) for thermal integrity.</li>
-                <li>Calculated suppression voltages (\(-450\text{V to } -500\text{V}\)) via SIMION 8.0 and LORENTZ.</li>
+                <li>Developed a $10\text{ kW}$ Faraday cup capable of measuring $20$ to $30\text{ mA}$ beam intensities.</li>
+                <li>Designed cooling systems maintaining copper Faraday Cup at $350.6^\circ\text{C}$ for thermal integrity.</li>
+                <li>Calculated suppression voltages ($-450\text{V}$ to $-500\text{V}$) via SIMION 8.0 and LORENTZ.</li>
             </ul>
         </div>
 
         <h2 class="module-title">[ 03: RESTRICTED ARCHIVES (PUBLICATIONS) ]</h2>
-        <div class="lab-card">
+        <div class="lab-card archives-sec">
             <div class="pub-box"><b>Instruments (2026):</b> Characterization of the extraction system of supersonic gas curtain-based ionization profile monitor for flash proton therapy.</div>
             <div class="pub-box"><b>IBIC (2025):</b> Design studies of a Retarding Potential Energy Analyser (RPEA) for low energy antimatter experiments.</div>
             <div class="pub-box"><b>Instruments (2025):</b> Faraday cups: principles, designs, and applications across scientific disciplines—a review.</div>
             <div class="pub-box"><b>EXA-LEAP (2025):</b> 3D simulation studies of mixed plasma confinement at AEgIS.</div>
-            <div class="pub-box"><b>Phys. Rev. Lett. (2024):</b> Positronium Laser Cooling via the \(1^3\text{S-}2^3\text{P}\) Transition with a Broadband Laser Pulse.</div>
+            <div class="pub-box"><b>Phys. Rev. Lett. (2024):</b> Positronium Laser Cooling via the $1^3\text{S-}2^3\text{P}$ Transition with a Broadband Laser Pulse.</div>
             <div class="pub-box"><b>IPAC (2024):</b> Simulation studies for the confinement of antiprotons for the AEgIS experiment.</div>
             <div class="pub-box"><b>IEEE TPS (2023):</b> Experimental Studies on the Roles of Space Charge Neutralization in a Ring Cusp Ion Source.</div>
             <div class="pub-box"><b>AIP Advances (2022):</b> Measurement system for ion beam profiles using fixed parallel wires and Faraday cup array.</div>
             <div class="pub-box"><b>IEEE TPS (2021):</b> Characterization of a Multicusp Ion Source with Two-Grid Extraction System.</div>
-            <div class="pub-box"><b>ICONE25 (2017):</b> Design and simulation of \(10\text{ kW}\) Faraday cup for ion beam current.</div>
-        </section>
+            <div class="pub-box"><b>ICONE25 (2017):</b> Design and simulation of $10\text{ kW}$ Faraday cup for ion beam current.</div>
+        </div>
 
         <h2 class="module-title">[ 04: SUBJECT INTEL ]</h2>
-        <div class="lab-card">
+        <div class="lab-card intel-sec">
             <p style="font-size: 1.5rem;"><b>SOFTWARE STACK:</b> CST Studio, OPERA3D, SIMION, COMSOL, RF Track, ANSYS, ASTRA, MAD-X, Geant4, IBISIMU.</p>
             <div style="display:flex; gap: 20px; flex-wrap: wrap; margin-top: 30px;">
                 <span class="pub-box">♟ CHESS: 1900 ELO (EXPERT)</span>
@@ -175,138 +218,18 @@
     </div>
 
     <div id="jukebox-card" style="display:none;">
-        <div id="j-header">[ PSYCHIC_TRANSCEIVER_V6 ]</div>
-        <div id="t-text" style="font-size:0.85rem; margin:10px 0; color:#fff; height:1rem; overflow:hidden;">LOCKED...</div>
-        <div style="display:flex; gap:5px;">
-            <button class="btn-lab" onclick="togglePlay()" style="flex:1">PLAY</button>
-            <button class="btn-lab" onclick="changeTrack(1)" style="flex:1">NEXT</button>
+        <div id="j-header">[ CLASSIFIED_AUDIO_TRANSCEIVER ]</div>
+        <div id="t-text">LOCKED...</div>
+        <div style="display:flex; gap:5px; flex-direction:column;">
+            <div style="display:flex; gap:5px;">
+                <button class="btn-lab" id="play-btn" onclick="togglePlay()" style="flex:1">PLAY</button>
+                <button class="btn-lab" onclick="changeTrack(1)" style="flex:1">NEXT</button>
+            </div>
+            <button class="btn-lab" onclick="shufflePlaylist()">SHUFFLE</button>
         </div>
-        <div style="display:flex; align-items:center; gap:10px; margin-top:15px;">
-            <button id="mute-btn" style="background:none; border:none; color:var(--psychic-blue); cursor:pointer; font-size:1.2rem;">🔊</button>
-            <input type="range" id="vol" min="0" max="1" step="0.01" value="0.4">
-        </div>
+        <input type="range" id="vol" min="0" max="1" step="0.01" value="0.4">
     </div>
 
-    <script>
-        const fxCanvas = document.getElementById('fx-canvas');
-        const fCtx = fxCanvas.getContext('2d');
-        const pCursor = document.getElementById('psychic-cursor');
-        const juke = document.getElementById('jukebox-card');
-        
-        let ripples = [], bloodDrips = [];
-        let psychicStrain = 0;
-        let isDisintegrated = false;
-
-        const audio = new Audio();
-        const drone = new Audio("https://www.soundjay.com/mechanical/sounds/machinery-drone-1.mp3"); drone.loop = true;
-        const playlist = ["track1.mp3", "track2.mp3", "track13.mp3", "track21.mp3"]; let cur = 0;
-
-        function startSystem() {
-            document.getElementById('intro-container').style.display = 'none';
-            juke.style.display = 'block';
-            audio.src = playlist[cur]; drone.play();
-            animate();
-        }
-
-        // --- WAVY SHOCKWAVES & DISINTEGRATION ---
-        window.addEventListener('mousedown', (e) => {
-            if(e.target.closest('#jukebox-card, button')) return;
-            
-            // Shockwave
-            ripples.push({ x: e.clientX, y: e.clientY, r: 0, maxR: 750, speed: 18, opacity: 1 });
-            
-            // Nosebleed Tracking
-            psychicStrain++;
-            if(psychicStrain > 10) bloodDrips.push({ x: Math.random()*window.innerWidth, y: -20, h: 0, maxH: 250+Math.random()*250, s: 4 });
-        });
-
-        function animate() {
-            fxCanvas.width = window.innerWidth; fxCanvas.height = window.innerHeight;
-            fCtx.clearRect(0, 0, fxCanvas.width, fxCanvas.height);
-            
-            ripples.forEach((r, i) => {
-                r.r += r.speed; r.opacity -= 0.015;
-                if(r.opacity <= 0) ripples.splice(i, 1);
-                else {
-                    // Draw Realistic Wavy Shockwave
-                    fCtx.beginPath();
-                    for(let a=0; a<Math.PI*2; a+=0.1) {
-                        const waveDist = r.r + Math.sin(a*15 + r.r/10)*20;
-                        fCtx.lineTo(r.x + Math.cos(a)*waveDist, r.y + Math.sin(a)*waveDist);
-                    }
-                    fCtx.strokeStyle = `rgba(0, 242, 255, ${r.opacity})`;
-                    fCtx.lineWidth = 6; fCtx.stroke();
-
-                    // Disintegration Logic
-                    const jRect = juke.getBoundingClientRect();
-                    const jCenterX = jRect.left + jRect.width/2;
-                    const jCenterY = jRect.top + jRect.height/2;
-                    const dist = Math.sqrt(Math.pow(r.x - jCenterX, 2) + Math.pow(r.y - jCenterY, 2));
-                    
-                    if(Math.abs(dist - r.r) < 30 && !isDisintegrated) {
-                        triggerDisintegration();
-                    }
-                }
-            });
-
-            // Draw Nosebleed
-            bloodDrips.forEach((d, i) => { 
-                d.h += d.s; fCtx.fillStyle = '#8B0000'; 
-                fCtx.fillRect(d.x, d.y, 5, d.h); 
-                if(d.h > d.maxH) bloodDrips.splice(i, 1); 
-            });
-
-            requestAnimationFrame(animate);
-        }
-
-        function triggerDisintegration() {
-            isDisintegrated = true;
-            juke.style.opacity = "0";
-            juke.style.filter = "blur(30px) brightness(5)";
-            juke.style.transform = "scale(1.5) skew(20deg)";
-            
-            setTimeout(() => {
-                // Teleport and Reappear
-                const newX = Math.random() * (window.innerWidth - 300);
-                const newY = Math.random() * (window.innerHeight - 300);
-                juke.style.left = newX + "px";
-                juke.style.top = newY + "px";
-                juke.style.right = "auto";
-                
-                setTimeout(() => {
-                    juke.style.opacity = "1";
-                    juke.style.filter = "none";
-                    juke.style.transform = "scale(1)";
-                    isDisintegrated = false;
-                }, 500);
-            }, 600);
-        }
-
-        // --- JUKEBOX & PARALLAX ---
-        let drag = false, off = {x:0, y:0};
-        document.getElementById('j-header').onmousedown = (e) => { 
-            drag = true; off.x = e.clientX - juke.offsetLeft; off.y = e.clientY - juke.offsetTop; juke.style.right = 'auto'; 
-        };
-        window.addEventListener('mousemove', (e) => { 
-            pCursor.style.left = e.clientX + 'px'; pCursor.style.top = e.clientY + 'px';
-            if(drag) { juke.style.left = (e.clientX - off.x)+'px'; juke.style.top = (e.clientY - off.y)+'px'; } 
-            
-            const xOff = (window.innerWidth/2 - e.clientX)/25;
-            const yOff = (window.innerHeight/2 - e.clientY)/25;
-            document.querySelectorAll('.lab-card').forEach(c => c.style.transform = `rotateY(${xOff}deg) rotateX(${-yOff}deg)`);
-        });
-        window.addEventListener('mouseup', () => drag = false);
-
-        const muteBtn = document.getElementById('mute-btn');
-        muteBtn.onclick = () => { audio.muted = !audio.muted; muteBtn.innerText = audio.muted ? '🔇' : '🔊'; };
-        document.getElementById('vol').oninput = (e) => { audio.volume = e.target.value; drone.volume = e.target.value * 0.5; };
-
-        window.addEventListener('scroll', () => {
-            document.body.classList.toggle('vecna-curse', (window.innerHeight + window.scrollY) >= document.body.offsetHeight - 50);
-        });
-
-        function togglePlay() { if(audio.paused) audio.play(); else audio.pause(); document.getElementById('t-text').innerText = "SIGNAL_ACTIVE"; }
-        function changeTrack(d) { cur=(cur+d)%playlist.length; audio.src=playlist[cur]; audio.play(); }
-    </script>
+    <script src="jukebox.js"></script>
 </body>
 </html>
