@@ -8,11 +8,7 @@
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     
     <script>
-        window.MathJax = {
-            tex: {
-                inlineMath: [['$', '$'], ['\\(', '\\)']]
-            }
-        };
+        window.MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] } };
     </script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     
@@ -41,13 +37,9 @@
 
         /* --- THE RED RIFT VIGNETTE --- */
         body::before {
-            content: "";
-            position: fixed;
-            inset: 0;
+            content: ""; position: fixed; inset: 0;
             background: radial-gradient(circle, transparent 40%, rgba(255, 0, 0, 0.4) 100%);
-            z-index: 9999996;
-            pointer-events: none;
-            opacity: 0;
+            z-index: 9999996; pointer-events: none; opacity: 0;
             transition: opacity 1.5s ease;
         }
         body.vecna-curse::before { opacity: 1; }
@@ -96,14 +88,18 @@
             transform-style: preserve-3d; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* Hover Dynamics */
-        .summary-sec:hover { border-left-color: var(--psychic-blue); box-shadow: 0 0 40px rgba(0, 242, 255, 0.2); }
-        .record-sec:hover { border-left-color: var(--amber-warn); box-shadow: 0 0 40px rgba(255, 179, 0, 0.2); }
-        .clearance-sec:hover { border-left-color: var(--rift-purple); box-shadow: 0 0 40px rgba(161, 0, 255, 0.2); }
-        .archives-sec:hover { border-left-color: #fff; box-shadow: 0 0 40px rgba(255, 255, 255, 0.2); }
-        .intel-sec:hover { border-left-color: #00ff41; box-shadow: 0 0 40px rgba(0, 255, 65, 0.2); }
+        /* Hover Dynamics - Only apply on non-touch devices */
+        @media (hover: hover) and (pointer: fine) {
+            .summary-sec:hover { border-left-color: var(--psychic-blue); box-shadow: 0 0 40px rgba(0, 242, 255, 0.2); }
+            .record-sec:hover { border-left-color: var(--amber-warn); box-shadow: 0 0 40px rgba(255, 179, 0, 0.2); }
+            .clearance-sec:hover { border-left-color: var(--rift-purple); box-shadow: 0 0 40px rgba(161, 0, 255, 0.2); }
+            .archives-sec:hover { border-left-color: #fff; box-shadow: 0 0 40px rgba(255, 255, 255, 0.2); }
+            .intel-sec:hover { border-left-color: #00ff41; box-shadow: 0 0 40px rgba(0, 255, 65, 0.2); }
+            li:hover { color: #fff; transform: translateX(10px); }
+            .pub-box:hover { background: rgba(255,255,255, 0.08); transform: scale(1.02); color: #fff; }
+        }
 
-        h1 { font-family: 'Baskervville', serif; font-size: 4.8rem; color: var(--gate-red); text-shadow: 0 0 30px #f00; margin: 0; }
+        h1 { font-family: 'Baskervville', serif; font-size: 4.8rem; color: var(--gate-red); text-shadow: 0 0 30px #f00; margin: 0; line-height: 1.1; }
         h2.module-title { color: #888; text-transform: uppercase; letter-spacing: 10px; border-bottom: 2px solid #333; padding-bottom: 15px; margin-top: 80px; font-size: 1.4rem; }
         
         .sub-role { color: #fff; font-weight: bold; font-size: 1.8rem; display: block; margin-top: 30px; border-bottom: 2px solid var(--psychic-blue); width: fit-content; }
@@ -112,10 +108,8 @@
         ul { list-style: none; padding: 0; margin-top: 25px; }
         li::before { content: "➤ "; color: var(--psychic-blue); font-weight: bold; }
         li { margin-bottom: 20px; font-size: 1.45rem; line-height: 1.6; color: #ddd; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 10px; transition: 0.3s; }
-        li:hover { color: #fff; transform: translateX(10px); }
 
         .pub-box { background: rgba(255,255,255, 0.03); padding: 25px; border-left: 5px solid var(--gate-red); margin-bottom: 20px; transition: 0.4s; color: #ccc; }
-        .pub-box:hover { background: rgba(255,255,255, 0.08); transform: scale(1.02); color: #fff; }
 
         #jukebox-card {
             position: fixed; top: 150px; left: 30px; width: 280px;
@@ -124,9 +118,36 @@
             user-select: none;
         }
         #j-header { cursor: move; color: var(--psychic-blue); border-bottom: 1px solid var(--psychic-blue); padding-bottom: 8px; font-weight: bold; font-size: 0.9rem; }
-        .btn-lab { background: none; border: 2px solid var(--psychic-blue); color: var(--psychic-blue); padding: 8px; cursor: pointer; font-family: 'VT323'; font-size: 1.1rem; width: 100%; margin-top: 5px; }
+        .btn-lab { background: none; border: 2px solid var(--psychic-blue); color: var(--psychic-blue); padding: 8px; cursor: pointer; font-family: 'VT323'; font-size: 1.1rem; width: 100%; margin-top: 5px; box-sizing: border-box; }
         .btn-lab:hover { background: var(--psychic-blue); color: #000; }
         #t-text { font-size: 0.85rem; margin: 10px 0; color: #fff; height: 1.2rem; overflow: hidden; border-left: 3px solid var(--gate-red); padding-left: 8px; }
+
+        /* --- MOBILE & TABLET RESPONSIVE CSS --- */
+        @media (max-width: 850px) {
+            .container { padding: 80px 15px; }
+            .lab-card { padding: 30px 20px; margin-bottom: 50px; }
+            h1 { font-size: 2.8rem; }
+            h2.module-title { font-size: 1.2rem; letter-spacing: 5px; }
+            .sub-role { font-size: 1.4rem; }
+            .date-tag { font-size: 1.1rem; }
+            li { font-size: 1.1rem; }
+            .pub-box { padding: 15px; font-size: 1rem; }
+            
+            #upside-down-msg { font-size: 3rem; letter-spacing: 5px; width: 100%; }
+
+            /* Jukebox docks to the bottom center on phones */
+            #jukebox-card {
+                top: auto; bottom: 20px; left: 50%; transform: translateX(-50%);
+                width: 90%; max-width: 320px; box-shadow: 0 0 20px #000;
+            }
+        }
+
+        /* --- TOUCH DEVICE CURSOR OVERRIDE --- */
+        @media (hover: none) and (pointer: coarse) {
+            body, html { cursor: auto; }
+            #psychic-cursor { display: none !important; }
+            #j-header { cursor: auto; }
+        }
     </style>
 </head>
 <body>
@@ -137,7 +158,7 @@
 
     <div id="intro-container" style="position:fixed; inset:0; z-index:10000001; background:#000; display:flex; flex-direction:column; justify-content:center; align-items:center;">
         <h1 style="color:white; font-family:'Baskervville'; font-size: 4rem; text-align: center;"> WELCOME TO THE LABORATORY</h1>
-        <p style="color:var(--gate-red); letter-spacing: 15px; margin-top: 20px;">SUBJECT: RAWAT, B.S. // CLASSIFIED ACCESS</p>
+        <p style="color:var(--gate-red); letter-spacing: 15px; margin-top: 20px; text-align: center;">SUBJECT: RAWAT, B.S. // CLASSIFIED ACCESS</p>
         <button id="init-btn" onclick="startSystem()" style="background:transparent; color:red; border:3px solid red; padding:20px 50px; font-size:2rem; cursor:pointer; margin-top:40px; letter-spacing:10px;">DECRYPT DOSSIER</button>
     </div>
 
@@ -147,9 +168,9 @@
             <h1>BHARAT SINGH RAWAT, Ph.D.</h1>
             <h3 style="color: #666; margin-top: 15px; font-size: 1.8rem;">// ION SOURCE & BEAM DIAGNOSTICS EXPERT</h3>
             <p style="color:#aaa; font-size: 1.6rem; margin-top: 25px;">Expert in manipulating charged particle beams with 7+ years of experience in ion sources , beam extraction/transport systems and digital twins.</p>
-            <div style="margin-top: 40px;">
-                <a href="https://bharat26031992.github.io/AEgIS_Outreach_Game/" target="_blank" class="btn-lab" style="display:inline-block; width:auto; text-decoration:none; padding: 15px 35px;">OP: DIGITAL TWIN GAME</a>
-                <a href="https://bharat26031992.github.io/Project-Hbar/" target="_blank" class="btn-lab" style="display:inline-block; width:auto; text-decoration:none; padding: 15px 35px; margin-left: 20px; border-color: var(--gate-red); color: var(--gate-red);">OP: PROJECT HBAR</a>
+            <div style="margin-top: 40px; display: flex; flex-wrap: wrap; gap: 15px;">
+                <a href="https://bharat26031992.github.io/AEgIS_Outreach_Game/" target="_blank" class="btn-lab" style="display:inline-block; width:auto; text-decoration:none; padding: 15px 35px; text-align: center;">OP: DIGITAL TWIN GAME</a>
+                <a href="https://bharat26031992.github.io/Project-Hbar/" target="_blank" class="btn-lab" style="display:inline-block; width:auto; text-decoration:none; padding: 15px 35px; border-color: var(--gate-red); color: var(--gate-red); text-align: center;">OP: PROJECT HBAR</a>
             </div>
         </section>
 
@@ -163,7 +184,7 @@
                 <li>Executing critical on-shift responsibilities during beam time, including real-time data acquisition and the management of cryogenic systems for superconducting magnets.</li>
             </ul>
 
-            <span class="sub-role">Radiation Protection Engineer | Nuvia India Pvt Limited</span>
+            <span class="sub-role" style="margin-top: 40px;">Radiation Protection Engineer | Nuvia India Pvt Limited</span>
             <span class="date-tag">2018 — 2018</span>
             <ul>
                 <li>Managed occupational radiation exposure at Kakrapar Atomic Power Station.</li>
@@ -183,7 +204,7 @@
                 <li>Engineered a nine-channel Parallel Wire Array (PWA) and a Faraday Cup array (FCA) for real-time monitoring of ion beam profiles.</li>
             </ul>
 
-            <span class="sub-role">M.Tech. Nuclear Engineering | Pandit Deendayal Petroleum University</span>
+            <span class="sub-role" style="margin-top: 40px;">M.Tech. Nuclear Engineering | Pandit Deendayal Petroleum University</span>
             <span class="date-tag">2015 — 2017</span>
             <ul>
                 <li>Developed a $10\text{ kW}$ Faraday cup capable of measuring $20$ to $30\text{ mA}$ beam intensities.</li>
@@ -210,9 +231,9 @@
         <div class="lab-card intel-sec">
             <p style="font-size: 1.5rem;"><b>SOFTWARE STACK:</b> CST Studio, OPERA3D, SIMION, COMSOL, RF Track, ANSYS, ASTRA, MAD-X, Geant4, IBISIMU.</p>
             <div style="display:flex; gap: 20px; flex-wrap: wrap; margin-top: 30px;">
-                <span class="pub-box">♟ CHESS: 1900 ELO (EXPERT)</span>
-                <span class="pub-box">🌍 5 LANGUAGES (ES, EN, GU, RU, HI)</span>
-                <span class="pub-box">🎵 KEYTAR & GUITAR</span>
+                <span class="pub-box" style="margin-bottom: 0;">♟ CHESS: 1900 ELO (EXPERT)</span>
+                <span class="pub-box" style="margin-bottom: 0;">🌍 5 LANGUAGES (ES, EN, GU, RU, HI)</span>
+                <span class="pub-box" style="margin-bottom: 0;">🎵 KEYTAR & GUITAR</span>
             </div>
         </div>
     </div>
@@ -227,9 +248,10 @@
             </div>
             <button class="btn-lab" onclick="shufflePlaylist()">SHUFFLE</button>
         </div>
-        <input type="range" id="vol" min="0" max="1" step="0.01" value="0.4">
+        <input type="range" id="vol" min="0" max="1" step="0.01" value="0.4" style="width: 100%; margin-top: 10px;">
     </div>
 
     <script src="jukebox.js"></script>
+    <script src="parallax.js"></script>
 </body>
 </html>

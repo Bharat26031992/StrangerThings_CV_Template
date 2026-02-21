@@ -46,24 +46,44 @@ document.addEventListener('DOMContentLoaded', () => {
     const fxCanvas = document.getElementById('fx-canvas');
     const fCtx = fxCanvas.getContext('2d');
 
-    // --- DRAGGING LOGIC ---
+    // --- DRAGGING LOGIC (MOBILE + DESKTOP) ---
     let isDragging = false;
     let offset = { x: 0, y: 0 };
 
-    header.onmousedown = (e) => {
+    function handleDragStart(clientX, clientY) {
         isDragging = true;
-        offset.x = e.clientX - card.offsetLeft;
-        offset.y = e.clientY - card.offsetTop;
-    };
-    document.onmousemove = (e) => {
-        if (isDragging) {
-            card.style.left = (e.clientX - offset.x) + 'px';
-            card.style.top = (e.clientY - offset.y) + 'px';
-        }
+        offset.x = clientX - card.offsetLeft;
+        offset.y = clientY - card.offsetTop;
+    }
+
+    function handleDragMove(clientX, clientY) {
+        // 1. ALWAYS update the psychic cursor, whether dragging or not
         const pCursor = document.getElementById('psychic-cursor');
-        if(pCursor) { pCursor.style.left = e.clientX + 'px'; pCursor.style.top = e.clientY + 'px'; }
-    };
-    document.onmouseup = () => isDragging = false;
+        if(pCursor) { 
+            pCursor.style.left = clientX + 'px'; 
+            pCursor.style.top = clientY + 'px'; 
+        }
+
+        // 2. ONLY move the jukebox card if we are currently holding it
+        if (!isDragging) return; 
+        card.style.left = (clientX - offset.x) + 'px';
+        card.style.top = (clientY - offset.y) + 'px';
+    }
+
+    function handleDragEnd() { isDragging = false; }
+
+    // Desktop Mouse Events
+    header.addEventListener('mousedown', (e) => handleDragStart(e.clientX, e.clientY));
+    document.addEventListener('mousemove', (e) => handleDragMove(e.clientX, e.clientY));
+    document.addEventListener('mouseup', handleDragEnd);
+
+    // Mobile Touch Events
+    header.addEventListener('touchstart', (e) => handleDragStart(e.touches[0].clientX, e.touches[0].clientY), {passive: true});
+    document.addEventListener('touchmove', (e) => {
+        if (isDragging) e.preventDefault(); // Prevent scrolling while dragging the jukebox
+        handleDragMove(e.touches[0].clientX, e.touches[0].clientY);
+    }, {passive: false});
+    document.addEventListener('touchend', handleDragEnd);
 
     // --- SYNTH ENGINE ---
     function initAudio() {
@@ -95,7 +115,6 @@ document.addEventListener('DOMContentLoaded', () => {
         lfo.start();
     }
 
-    // --- NEW: CRACKLE ENGINE ---
     function playCrackle(intensity) {
         if (!audioCtx || intensity < 0.1) return;
         const duration = 0.005 + Math.random() * 0.02;
@@ -109,14 +128,11 @@ document.addEventListener('DOMContentLoaded', () => {
         osc.start(); osc.stop(audioCtx.currentTime + duration);
     }
 
-    // --- NEW: RIFT STATIC ---
     function playRiftEnergy(active) {
         if (!audioCtx) return;
         if (active) {
-            // Sweep system frequency high
             riftFilter.frequency.exponentialRampToValueAtTime(1600, audioCtx.currentTime + 2);
             
-            // Shimmering white noise
             const bufferSize = audioCtx.sampleRate * 2;
             const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
             const data = buffer.getChannelData(0);
@@ -145,9 +161,9 @@ document.addEventListener('DOMContentLoaded', () => {
         loadTrack(currentTrackIndex);
         requestAnimationFrame(animate);
 
-        // Hover Psychic Resonance sound
+        // Hover Psychic Resonance sound (desktop only)
         document.querySelectorAll('.lab-card, li, .pub-box, h1, h2, .btn-lab').forEach(el => {
-            el.onmouseenter = () => window.playHoverStatic();
+            el.addEventListener('mouseenter', () => window.playHoverStatic());
         });
     };
 
@@ -195,12 +211,15 @@ document.addEventListener('DOMContentLoaded', () => {
         noise.buffer = buffer; noise.connect(g); g.connect(masterGain); noise.start();
     }
 
-    // --- PHYSICS & ANIMATION ---
-    window.addEventListener('mousedown', (e) => {
-        if(e.target.closest('#jukebox-card, button')) return;
-        ripples.push({ x: e.clientX, y: e.clientY, r: 0, maxR: 750, speed: 18, opacity: 1 });
+    // --- PHYSICS & ANIMATION (MOBILE + DESKTOP) ---
+    function createRipple(clientX, clientY, target) {
+        if(target && target.closest('#jukebox-card, button, a')) return;
+        ripples.push({ x: clientX, y: clientY, r: 0, maxR: 750, speed: 18, opacity: 1 });
         window.playHoverStatic();
-    });
+    }
+
+    window.addEventListener('mousedown', (e) => createRipple(e.clientX, e.clientY, e.target));
+    window.addEventListener('touchstart', (e) => createRipple(e.touches[0].clientX, e.touches[0].clientY, e.target), {passive: true});
 
     function animate() {
         fxCanvas.width = window.innerWidth; fxCanvas.height = window.innerHeight;
@@ -230,7 +249,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function triggerImpact() {
         isDisintegrated = true;
-        // High-frequency impact pop
         const osc = audioCtx.createOscillator(); const g = audioCtx.createGain();
         osc.type = 'square'; osc.frequency.value = 400; g.gain.value = 0.1;
         osc.connect(g); g.connect(masterGain); osc.start(); osc.stop(audioCtx.currentTime + 0.1);
@@ -246,9 +264,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- SCROLL & CRACKLE ENGINE ---
     window.addEventListener('scroll', () => {
         const totalHeight = document.body.offsetHeight - window.innerHeight;
+        if(totalHeight <= 0) return; // Prevent division by 0 on very short screens
+        
         const progress = window.scrollY / totalHeight;
 
-        // Dynamic Crackle as you descend
         if (Math.random() < progress * 0.35) {
             playCrackle(progress);
         }
