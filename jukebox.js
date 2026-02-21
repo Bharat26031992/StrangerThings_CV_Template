@@ -52,19 +52,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function handleDragStart(clientX, clientY) {
         isDragging = true;
-        offset.x = clientX - card.offsetLeft;
-        offset.y = clientY - card.offsetTop;
+        
+        // Fix for mobile: Calculate exact position before removing CSS constraints
+        const rect = card.getBoundingClientRect();
+        offset.x = clientX - rect.left;
+        offset.y = clientY - rect.top;
+
+        // Clear interfering mobile CSS
+        card.style.transform = 'none';
+        card.style.bottom = 'auto';
+        card.style.right = 'auto';
+        card.style.margin = '0';
+        
+        // Lock the card to the calculated position so it doesn't jump
+        card.style.left = rect.left + 'px';
+        card.style.top = rect.top + 'px';
     }
 
     function handleDragMove(clientX, clientY) {
-        // 1. ALWAYS update the psychic cursor, whether dragging or not
         const pCursor = document.getElementById('psychic-cursor');
         if(pCursor) { 
             pCursor.style.left = clientX + 'px'; 
             pCursor.style.top = clientY + 'px'; 
         }
 
-        // 2. ONLY move the jukebox card if we are currently holding it
         if (!isDragging) return; 
         card.style.left = (clientX - offset.x) + 'px';
         card.style.top = (clientY - offset.y) + 'px';
@@ -77,11 +88,17 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('mousemove', (e) => handleDragMove(e.clientX, e.clientY));
     document.addEventListener('mouseup', handleDragEnd);
 
-    // Mobile Touch Events
-    header.addEventListener('touchstart', (e) => handleDragStart(e.touches[0].clientX, e.touches[0].clientY), {passive: true});
+    // Mobile Touch Events - Updated with passive: false to lock screen scrolling
+    header.addEventListener('touchstart', (e) => {
+        handleDragStart(e.touches[0].clientX, e.touches[0].clientY);
+        e.preventDefault(); // Prevents the screen from scrolling when you grab the header
+    }, {passive: false});
+    
     document.addEventListener('touchmove', (e) => {
-        if (isDragging) e.preventDefault(); // Prevent scrolling while dragging the jukebox
-        handleDragMove(e.touches[0].clientX, e.touches[0].clientY);
+        if (isDragging) {
+            e.preventDefault(); // Lock the screen scroll while dragging the UI
+            handleDragMove(e.touches[0].clientX, e.touches[0].clientY);
+        }
     }, {passive: false});
     document.addEventListener('touchend', handleDragEnd);
 

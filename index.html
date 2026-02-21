@@ -117,7 +117,20 @@
             padding: 20px; z-index: 999999; box-shadow: 0 0 50px #000;
             user-select: none;
         }
-        #j-header { cursor: move; color: var(--psychic-blue); border-bottom: 1px solid var(--psychic-blue); padding-bottom: 8px; font-weight: bold; font-size: 0.9rem; }
+        
+        /* UPDATED: Significantly larger, thumb-friendly drag header */
+        #j-header { 
+            cursor: move; 
+            color: var(--psychic-blue); 
+            border-bottom: 1px solid var(--psychic-blue); 
+            padding: 15px 10px; 
+            font-weight: bold; 
+            font-size: 1.1rem; 
+            background: rgba(0, 242, 255, 0.05);
+            text-align: center;
+            touch-action: none; /* Prevents browser from scrolling when touched */
+        }
+        
         .btn-lab { background: none; border: 2px solid var(--psychic-blue); color: var(--psychic-blue); padding: 8px; cursor: pointer; font-family: 'VT323'; font-size: 1.1rem; width: 100%; margin-top: 5px; box-sizing: border-box; }
         .btn-lab:hover { background: var(--psychic-blue); color: #000; }
         #t-text { font-size: 0.85rem; margin: 10px 0; color: #fff; height: 1.2rem; overflow: hidden; border-left: 3px solid var(--gate-red); padding-left: 8px; }
