@@ -1,5 +1,7 @@
 # Stranger Things Theme Portfolio
 
+<img width="1815" height="842" alt="image" src="https://github.com/user-attachments/assets/d8d532df-cc47-44de-b1c8-5896b9816056" />
+
 ## Description
 
 An immersive, interactive portfolio website styled as a classified government dossier with Stranger Things-inspired aesthetics and supernatural visual effects. This project combines retro 80s styling with modern web technologies to create an engaging, theme-park-like experience.
