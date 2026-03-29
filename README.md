@@ -1,6 +1,6 @@
 # Stranger Things Theme Portfolio
 
-<img width="1815" height="842" alt="image" src="https://github.com/user-attachments/assets/d8d532df-cc47-44de-b1c8-5896b9816056" />
+<img width="1617" height="769" alt="image" src="https://github.com/user-attachments/assets/9cdf6cd9-daea-4bee-ab98-70c5d2ca7b5c" />
 
 ## Description
 
